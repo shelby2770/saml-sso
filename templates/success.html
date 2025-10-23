@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+
+{% block title %}SAML Login - Success{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="logo">
+        <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+    </div>
+    
+    <h1>Login Successful!</h1>
+    <p class="subtitle">You have been authenticated via SAML</p>
+    
+    <div class="status-badge status-authenticated">
+        <i class="fas fa-shield-alt"></i> Authentication Complete
+    </div>
+    
+    {% if message %}
+    <div class="message-box">
+        <i class="fas fa-info-circle"></i>
+        {{ message }}
+    </div>
+    {% endif %}
+    
+    <div class="user-info">
+        <h3><i class="fas fa-user-check"></i> Authentication Details</h3>
+        <div class="user-detail">
+            <strong>Name ID:</strong> {{ name_id }}
+        </div>
+        <div class="user-detail">
+            <strong>Timestamp:</strong> <span id="current-time"></span>
+        </div>
+        <div class="user-detail">
+            <strong>Status:</strong> <span style="color: #2ecc71;">Active</span>
+        </div>
+        <div class="user-detail">
+            <strong>Authentication Method:</strong> SAML 2.0
+        </div>
+        <div class="user-detail">
+            <strong>Identity Provider:</strong> Keycloak
+        </div>
+    </div>
+    
+    {% if user_attributes %}
+    <div class="attributes-info">
+        <h3><i class="fas fa-id-card"></i> User Profile Attributes</h3>
+        <div class="attributes-grid">
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Username</div>
+                    <div class="attribute-value">{{ user_attributes.username }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Email</div>
+                    <div class="attribute-value">{{ user_attributes.email }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Age</div>
+                    <div class="attribute-value">{{ user_attributes.age }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Mobile</div>
+                    <div class="attribute-value">{{ user_attributes.mobile }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Address</div>
+                    <div class="attribute-value">{{ user_attributes.address }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Profession</div>
+                    <div class="attribute-value">{{ user_attributes.profession }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="actions">
+        <a href="/" class="btn btn-primary">
+            <i class="fas fa-home"></i> Go to Home
+        </a>
+        <a href="/api/saml/logout/" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+    
+    <div class="footer">
+        <i class="fas fa-lock"></i> 
+        Secure session established via SAML SSO<br>
+        <small>Your session is now active and secure</small>
+    </div>
+</div>
+
+<script>
+    // Update current time
+    document.getElementById('current-time').textContent = new Date().toLocaleString();
+    
+    // Add some celebration animation
+    setTimeout(() => {
+        const logo = document.querySelector('.logo i');
+        logo.style.animation = 'bounce 0.5s ease-in-out 3';
+    }, 500);
+</script>
+
+<style>
+@keyframes bounce {
+    0%, 20%, 60%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    80% {
+        transform: translateY(-10px);
+    }
+}
+
+.message-box {
+    background: rgba(52, 152, 219, 0.1);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    color: #3498db;
+    text-align: center;
+}
+
+.attributes-info {
+    margin: 30px 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.attributes-info h3 {
+    color: #667eea;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+.attributes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.attribute-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #667eea;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.attribute-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.attribute-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.attribute-icon i {
+    color: white;
+    font-size: 1.2em;
+}
+
+.attribute-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.attribute-label {
+    font-size: 0.85em;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.attribute-value {
+    font-size: 1.05em;
+    color: #2c3e50;
+    font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Animation for attributes on load */
+.attribute-item {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.attribute-item:nth-child(1) { animation-delay: 0.1s; }
+.attribute-item:nth-child(2) { animation-delay: 0.2s; }
+.attribute-item:nth-child(3) { animation-delay: 0.3s; }
+.attribute-item:nth-child(4) { animation-delay: 0.4s; }
+.attribute-item:nth-child(5) { animation-delay: 0.5s; }
+.attribute-item:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .attributes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

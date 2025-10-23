@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Django SAML SSO - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="logo">
+        <i class="fas fa-shield-alt"></i>
+    </div>
+    
+    <h1>Django SAML SSO</h1>
+    <p class="subtitle">Secure Single Sign-On with Keycloak</p>
+    
+    {% if authenticated %}
+        <div class="status-badge status-authenticated">
+            <i class="fas fa-check-circle"></i> Authenticated
+        </div>
+        
+        <div class="user-info">
+            <h3><i class="fas fa-user"></i> User Information</h3>
+            <div class="user-detail">
+                <strong>Name ID:</strong> {{ user.name_id }}
+            </div>
+            <div class="user-detail">
+                <strong>Status:</strong> {{ user.attributes.status|default:"Active" }}
+            </div>
+            <div class="user-detail">
+                <strong>Source:</strong> {{ user.attributes.source|default:"Keycloak" }}
+            </div>
+            {% if user.attributes.note %}
+            <div class="user-detail">
+                <strong>Note:</strong> {{ user.attributes.note }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="actions">
+            <a href="/api/saml/logout/" class="btn btn-danger">
+                <i class="fas fa-sign-out-alt"></i> SAML Logout
+            </a>
+            <a href="/api/saml/simple-logout/" class="btn btn-secondary">
+                <i class="fas fa-power-off"></i> Simple Logout
+            </a>
+            <a href="/api/saml/cross-sp-logout/" class="btn btn-warning">
+                <i class="fas fa-exchange-alt"></i> Cross-SP Logout
+            </a>
+        </div>
+        
+    {% else %}
+        <div class="status-badge status-not-authenticated">
+            <i class="fas fa-exclamation-triangle"></i> Not Authenticated
+        </div>
+        
+        <p>Welcome! Please log in to access the application.</p>
+        
+        <div class="actions">
+            <a href="/api/saml/login/" class="btn btn-primary pulse">
+                <i class="fas fa-sign-in-alt"></i> Login with SAML
+            </a>
+        </div>
+    {% endif %}
+    
+    <div class="endpoints">
+        <h3><i class="fas fa-cogs"></i> Available Endpoints</h3>
+        
+        {% if authenticated %}
+            <div class="endpoint-item">
+                <span class="endpoint-label">SAML Logout:</span> /api/saml/logout/
+            </div>
+            <div class="endpoint-item">
+                <span class="endpoint-label">Simple Logout:</span> /api/saml/simple-logout/
+            </div>
+        {% else %}
+            <div class="endpoint-item">
+                <span class="endpoint-label">SAML Login:</span> /api/saml/login/
+            </div>
+        {% endif %}
+        
+        <div class="endpoint-item">
+            <span class="endpoint-label">Metadata:</span> /api/saml/metadata/
+        </div>
+        <div class="endpoint-item">
+            <span class="endpoint-label">Home:</span> /
+        </div>
+    </div>
+    
+    <div class="footer">
+        <i class="fas fa-info-circle"></i> 
+        Django SAML SSO Integration with Keycloak IdP<br>
+        <small>Powered by python3-saml & OneLogin</small>
+    </div>
+</div>
+{% endblock %}

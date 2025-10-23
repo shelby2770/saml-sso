@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout - Success{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="logo">
+        <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i>
+    </div>
+    
+    <h1>Logout Successful</h1>
+    <p class="subtitle">You have been safely signed out</p>
+    
+    <div class="status-badge status-not-authenticated">
+        <i class="fas fa-power-off"></i> Session Terminated
+    </div>
+    
+    {% if message %}
+    <div class="message-box">
+        <i class="fas fa-info-circle"></i>
+        {{ message }}
+    </div>
+    {% endif %}
+    
+    <div class="user-info">
+        <h3><i class="fas fa-shield-alt"></i> Session Status</h3>
+        <div class="user-detail">
+            <strong>Status:</strong> <span style="color: #e74c3c;">Logged Out</span>
+        </div>
+        <div class="user-detail">
+            <strong>Session:</strong> Terminated
+        </div>
+        <div class="user-detail">
+            <strong>Timestamp:</strong> <span id="current-time"></span>
+        </div>
+        <div class="user-detail">
+            <strong>Action:</strong> {{ logout_type|default:"Standard logout" }}
+        </div>
+    </div>
+    
+    <div class="actions">
+        <a href="/api/saml/login/" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Login Again
+        </a>
+        <a href="/" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Go to Home
+        </a>
+    </div>
+    
+    <div class="footer">
+        <i class="fas fa-check-circle"></i> 
+        Your session has been securely terminated<br>
+        <small>Thank you for using Django SAML SSO</small>
+    </div>
+</div>
+
+<script>
+    // Update current time
+    document.getElementById('current-time').textContent = new Date().toLocaleString();
+</script>
+
+<style>
+.message-box {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    color: #e74c3c;
+    text-align: center;
+}
+</style>
+{% endblock %}

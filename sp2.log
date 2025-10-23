@@ -1,0 +1,9 @@
+Watching for file changes with StatReloader
+[23/Oct/2025 09:51:39] "GET / HTTP/1.1" 200 1817
+[23/Oct/2025 09:51:39] "GET / HTTP/1.1" 200 1817
+[23/Oct/2025 09:52:17] "GET / HTTP/1.1" 200 1817
+[23/Oct/2025 09:52:17] "GET /static/js/main.js HTTP/1.1" 404 1844
+Not Found: /favicon.ico
+[23/Oct/2025 09:52:18] "GET /favicon.ico HTTP/1.1" 404 2509
+[23/Oct/2025 09:52:20] "GET / HTTP/1.1" 200 1817
+[23/Oct/2025 09:52:21] "GET /static/js/main.js HTTP/1.1" 404 1844
