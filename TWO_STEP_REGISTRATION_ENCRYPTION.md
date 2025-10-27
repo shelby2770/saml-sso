@@ -12,7 +12,7 @@ STEP 1: User fills registration form
 
 STEP 2: Register WebAuthn credential
 ├─ User touches security key
-└─ Credential createdrst and webauthn in the second step. BU
+└─ Credential created
 
 PROBLEM: How to encrypt STEP 1 data using STEP 2 credential?
 ```

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "🔄 REVERTING TO DEFAULT KEYCLOAK THEME"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "The custom registration theme is causing errors because it only"
+echo "has register.ftl but Keycloak needs ALL templates (login.ftl,"
+echo "error.ftl, info.ftl, etc.)"
+echo ""
+echo "📋 YOU NEED TO DO THIS MANUALLY:"
+echo ""
+echo "1. Open: http://localhost:8080"
+echo "2. Login: admin / admin"
+echo "3. Select 'demo' realm (top-left dropdown)"
+echo "4. Go to: Realm settings → Themes tab"
+echo "5. Login theme: Select 'keycloak' (or leave empty for default)"
+echo "6. Click 'Save'"
+echo ""
+echo "✅ After this, your login will work again!"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
