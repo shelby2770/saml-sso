@@ -94,6 +94,14 @@ def saml_callback(request):
             request.session['samlUserdata'] = clean_attributes
             request.session['saml_authenticated'] = True
             
+            # DEBUG: Print all raw attributes to see what Keycloak is sending
+            print("\n" + "="*60)
+            print("🔍 RAW ATTRIBUTES FROM KEYCLOAK:")
+            print("="*60)
+            for key, value in clean_attributes.items():
+                print(f"  Key: '{key}' = Value: '{value}'")
+            print("="*60 + "\n")
+            
             # Extract custom attributes for display
             user_attributes = {
                 'username': clean_attributes.get('username', name_id),
@@ -103,6 +111,20 @@ def saml_callback(request):
                 'address': clean_attributes.get('address', 'N/A'),
                 'profession': clean_attributes.get('profession', 'N/A'),
             }
+            
+            # Extract encrypted attributes (if user registered with WebAuthn encryption)
+            encrypted_attributes = {
+                'encrypted_payload': clean_attributes.get('encrypted_payload', None),
+                'encrypted_payload_chunks': clean_attributes.get('encrypted_payload_chunks', None),
+                'encrypted_payload_chunk1': clean_attributes.get('encrypted_payload_chunk1', None),
+                'encrypted_payload_chunk2': clean_attributes.get('encrypted_payload_chunk2', None),
+                'encrypted_payload_chunk3': clean_attributes.get('encrypted_payload_chunk3', None),
+                'webauthn_credential_id': clean_attributes.get('webauthn_credential_id', None),
+                'encryption_salt': clean_attributes.get('encryption_salt', None),
+            }
+            
+            # Check if user has encrypted data
+            has_encrypted_data = encrypted_attributes['encrypted_payload'] is not None
             
             # Console log for debugging (will show in Django server logs)
             print("\n" + "="*60)
@@ -118,6 +140,8 @@ def saml_callback(request):
                 'name_id': name_id,
                 'message': 'User authenticated successfully',
                 'user_attributes': user_attributes,
+                'encrypted_attributes': encrypted_attributes,
+                'has_encrypted_data': has_encrypted_data,
                 'raw_attributes': clean_attributes  # For debugging
             })
         else:
@@ -131,19 +155,77 @@ def saml_callback(request):
         error_reason = auth.get_last_error_reason()
         if "No Signature found" in error_reason or "Signature validation failed" in error_reason:
             # This is a signature validation error during login, not a logout scenario
-            # For development, we'll create a basic authenticated session
-            request.session['saml_authenticated'] = True
-            request.session['samlNameId'] = 'dev_user'
-            request.session['samlUserdata'] = {
-                'status': 'authenticated',
-                'source': 'keycloak',
-                'note': 'Development mode - signature validation bypassed'
-            }
-            
-            return render(request, 'success.html', {
-                'name_id': 'dev_user',
-                'message': 'User authenticated successfully (development mode - signature validation bypassed)'
-            })
+            # Try to extract attributes anyway even if signature validation failed
+            try:
+                attributes = auth.get_attributes()
+                clean_attributes = {}
+                for key, value in attributes.items():
+                    if isinstance(value, list) and len(value) > 0:
+                        clean_attributes[key] = value[0]
+                    else:
+                        clean_attributes[key] = value
+                
+                # DEBUG: Print all raw attributes
+                print("\n" + "="*60)
+                print("🔍 RAW ATTRIBUTES FROM KEYCLOAK (Development Mode):")
+                print("="*60)
+                for key, value in clean_attributes.items():
+                    print(f"  Key: '{key}' = Value: '{value}'")
+                print("="*60 + "\n")
+                
+                name_id = auth.get_nameid() or 'dev_user'
+                
+                # Extract custom attributes for display
+                user_attributes = {
+                    'username': clean_attributes.get('username', name_id),
+                    'email': clean_attributes.get('email', 'N/A'),
+                    'age': clean_attributes.get('age', 'N/A'),
+                    'mobile': clean_attributes.get('mobile', 'N/A'),
+                    'address': clean_attributes.get('address', 'N/A'),
+                    'profession': clean_attributes.get('profession', 'N/A'),
+                }
+                
+                # Extract encrypted attributes
+                encrypted_attributes = {
+                    'encrypted_payload': clean_attributes.get('encrypted_payload', None),
+                    'encrypted_payload_chunks': clean_attributes.get('encrypted_payload_chunks', None),
+                    'encrypted_payload_chunk1': clean_attributes.get('encrypted_payload_chunk1', None),
+                    'encrypted_payload_chunk2': clean_attributes.get('encrypted_payload_chunk2', None),
+                    'encrypted_payload_chunk3': clean_attributes.get('encrypted_payload_chunk3', None),
+                    'webauthn_credential_id': clean_attributes.get('webauthn_credential_id', None),
+                    'encryption_salt': clean_attributes.get('encryption_salt', None),
+                }
+                
+                has_encrypted_data = encrypted_attributes['encrypted_payload'] is not None
+                
+                # Store in session
+                request.session['saml_authenticated'] = True
+                request.session['samlNameId'] = name_id
+                request.session['samlUserdata'] = clean_attributes
+                
+                return render(request, 'success.html', {
+                    'name_id': name_id,
+                    'message': 'User authenticated successfully (development mode - signature validation bypassed)',
+                    'user_attributes': user_attributes,
+                    'encrypted_attributes': encrypted_attributes,
+                    'has_encrypted_data': has_encrypted_data,
+                    'raw_attributes': clean_attributes
+                })
+            except Exception as e:
+                print(f"Error extracting attributes in dev mode: {e}")
+                # Fallback to basic auth
+                request.session['saml_authenticated'] = True
+                request.session['samlNameId'] = 'dev_user'
+                request.session['samlUserdata'] = {
+                    'status': 'authenticated',
+                    'source': 'keycloak',
+                    'note': 'Development mode - signature validation bypassed'
+                }
+                
+                return render(request, 'success.html', {
+                    'name_id': 'dev_user',
+                    'message': 'User authenticated successfully (development mode - signature validation bypassed)'
+                })
         
         # Check if this is a logout-related error but session is cleared
         elif not request.session.session_key or len(request.session.keys()) == 0:
