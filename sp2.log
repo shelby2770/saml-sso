@@ -1,1 +1,11 @@
 Watching for file changes with StatReloader
+/home/shelby70/Projects/Django-SAML (2)/SAML_DJNAGO_2/django_saml_Auth/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+October 29, 2025 - 08:02:37
+Django version 5.1.2, using settings 'settings'
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader

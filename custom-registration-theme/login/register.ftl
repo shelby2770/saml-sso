@@ -30,10 +30,12 @@
                     <!-- Email -->
                     <div class="${properties.kcFormGroupClass!}">
                         <div class="${properties.kcLabelWrapperClass!}">
-                            <label for="email" class="${properties.kcLabelClass!}">${msg("email")}</label>
+                            <label for="email" class="${properties.kcLabelClass!}">
+                                ${msg("email")} <small style="color: #666;">(Will be encrypted)</small>
+                            </label>
                         </div>
                         <div class="${properties.kcInputWrapperClass!}">
-                            <input type="email" id="email" class="${properties.kcInputClass!}" 
+                            <input type="email" id="email" class="${properties.kcInputClass!} plaintext-field" 
                                    name="email" value="${(register.formData.email!'')}" 
                                    autocomplete="email"
                                    aria-invalid="<#if messagesPerField.existsError('email')>true</#if>" />
@@ -48,10 +50,12 @@
                     <!-- First Name -->
                     <div class="${properties.kcFormGroupClass!}">
                         <div class="${properties.kcLabelWrapperClass!}">
-                            <label for="firstName" class="${properties.kcLabelClass!}">${msg("firstName")}</label>
+                            <label for="firstName" class="${properties.kcLabelClass!}">
+                                ${msg("firstName")} <small style="color: #666;">(Will be encrypted)</small>
+                            </label>
                         </div>
                         <div class="${properties.kcInputWrapperClass!}">
-                            <input type="text" id="firstName" class="${properties.kcInputClass!}" 
+                            <input type="text" id="firstName" class="${properties.kcInputClass!} plaintext-field" 
                                    name="firstName" value="${(register.formData.firstName!'')}" />
                         </div>
                     </div>
@@ -59,10 +63,12 @@
                     <!-- Last Name -->
                     <div class="${properties.kcFormGroupClass!}">
                         <div class="${properties.kcLabelWrapperClass!}">
-                            <label for="lastName" class="${properties.kcLabelClass!}">${msg("lastName")}</label>
+                            <label for="lastName" class="${properties.kcLabelClass!}">
+                                ${msg("lastName")} <small style="color: #666;">(Will be encrypted)</small>
+                            </label>
                         </div>
                         <div class="${properties.kcInputWrapperClass!}">
-                            <input type="text" id="lastName" class="${properties.kcInputClass!}" 
+                            <input type="text" id="lastName" class="${properties.kcInputClass!} plaintext-field" 
                                    name="lastName" value="${(register.formData.lastName!'')}" />
                         </div>
                     </div>
@@ -101,22 +107,37 @@
                         </div>
                     </div>
 
-                    <!-- Phone Number (Sensitive - will be encrypted) -->
+                    <!-- Age (Will be encrypted) -->
                     <div class="${properties.kcFormGroupClass!}">
                         <div class="${properties.kcLabelWrapperClass!}">
-                            <label for="user.attributes.phone" class="${properties.kcLabelClass!}">
-                                📱 Phone Number <small style="color: #666;">(Will be encrypted)</small>
+                            <label for="user.attributes.age" class="${properties.kcLabelClass!}">
+                                🎂 Age <small style="color: #666;">(Will be encrypted)</small>
                             </label>
                         </div>
                         <div class="${properties.kcInputWrapperClass!}">
-                            <input type="tel" id="user.attributes.phone" class="${properties.kcInputClass!}" 
-                                   name="user.attributes.phone" 
-                                   value="${(register.formData['user.attributes.phone']!'')}"
+                            <input type="number" id="user.attributes.age" class="${properties.kcInputClass!} plaintext-field" 
+                                   name="user.attributes.age" 
+                                   value="${(register.formData['user.attributes.age']!'')}"
+                                   placeholder="25" min="1" max="150" />
+                        </div>
+                    </div>
+
+                    <!-- Phone Number (Will be encrypted) -->
+                    <div class="${properties.kcFormGroupClass!}">
+                        <div class="${properties.kcLabelWrapperClass!}">
+                            <label for="user.attributes.mobile" class="${properties.kcLabelClass!}">
+                                📱 Mobile <small style="color: #666;">(Will be encrypted)</small>
+                            </label>
+                        </div>
+                        <div class="${properties.kcInputWrapperClass!}">
+                            <input type="tel" id="user.attributes.mobile" class="${properties.kcInputClass!} plaintext-field" 
+                                   name="user.attributes.mobile" 
+                                   value="${(register.formData['user.attributes.mobile']!'')}"
                                    placeholder="+1-555-1234" />
                         </div>
                     </div>
 
-                    <!-- Address (Sensitive - will be encrypted) -->
+                    <!-- Address (Will be encrypted) -->
                     <div class="${properties.kcFormGroupClass!}">
                         <div class="${properties.kcLabelWrapperClass!}">
                             <label for="user.attributes.address" class="${properties.kcLabelClass!}">
@@ -124,48 +145,61 @@
                             </label>
                         </div>
                         <div class="${properties.kcInputWrapperClass!}">
-                            <textarea id="user.attributes.address" class="${properties.kcInputClass!}" 
+                            <textarea id="user.attributes.address" class="${properties.kcInputClass!} plaintext-field" 
                                       name="user.attributes.address" 
                                       rows="2"
                                       placeholder="123 Main Street, City, State">${(register.formData['user.attributes.address']!'')}</textarea>
                         </div>
                     </div>
 
-                    <!-- Hidden fields for encrypted data -->
-                    <input type="hidden" id="encrypted-payload" name="user.attributes.encrypted_payload" value="" />
-                    <input type="hidden" id="encrypted-payload-chunks" name="user.attributes.encrypted_payload_chunks" value="" />
-                    <input type="hidden" id="encrypted-payload-chunk1" name="user.attributes.encrypted_payload_chunk1" value="" />
-                    <input type="hidden" id="encrypted-payload-chunk2" name="user.attributes.encrypted_payload_chunk2" value="" />
-                    <input type="hidden" id="encrypted-payload-chunk3" name="user.attributes.encrypted_payload_chunk3" value="" />
-                    <input type="hidden" id="webauthn-credential-id" name="user.attributes.webauthn_credential_id" value="" />
-                    <input type="hidden" id="encryption-salt" name="user.attributes.encryption_salt" value="" />
-
-                    <!-- WebAuthn Encryption Checkbox -->
-                    <div class="${properties.kcFormGroupClass!}" style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
-                        <label style="display: flex; align-items: flex-start; cursor: pointer; margin: 0;">
-                            <input type="checkbox" id="use-webauthn-encryption" 
-                                   style="margin-right: 12px; margin-top: 3px; width: 20px; height: 20px; cursor: pointer;" />
-                            <div>
-                                <strong style="font-size: 16px;">🔐 Encrypt my sensitive data with security key</strong>
-                                <br/>
-                                <small style="color: #f0f0f0; line-height: 1.5;">
-                                    Your phone number and address will be encrypted using your hardware security key (YubiKey, etc.). 
-                                    You'll need to touch your key during registration.
-                                </small>
-                            </div>
-                        </label>
+                    <!-- Profession (Will be encrypted) -->
+                    <div class="${properties.kcFormGroupClass!}">
+                        <div class="${properties.kcLabelWrapperClass!}">
+                            <label for="user.attributes.profession" class="${properties.kcLabelClass!}">
+                                💼 Profession <small style="color: #666;">(Will be encrypted)</small>
+                            </label>
+                        </div>
+                        <div class="${properties.kcInputWrapperClass!}">
+                            <input type="text" id="user.attributes.profession" class="${properties.kcInputClass!} plaintext-field" 
+                                   name="user.attributes.profession" 
+                                   value="${(register.formData['user.attributes.profession']!'')}"
+                                   placeholder="Software Developer" />
+                        </div>
                     </div>
 
-                    <!-- WebAuthn Status Indicator -->
-                    <div id="webauthn-status" style="margin-top: 15px; padding: 12px; border-radius: 5px; display: none; font-weight: 500;"></div>
+                    <!-- Hidden fields for encrypted data -->
+                    <input type="hidden" id="encrypted-firstName" name="user.attributes.encrypted_firstName" value="" />
+                    <input type="hidden" id="encrypted-lastName" name="user.attributes.encrypted_lastName" value="" />
+                    <input type="hidden" id="encrypted-email" name="user.attributes.encrypted_email" value="" />
+                    <input type="hidden" id="encrypted-age" name="user.attributes.encrypted_age" value="" />
+                    <input type="hidden" id="encrypted-mobile" name="user.attributes.encrypted_mobile" value="" />
+                    <input type="hidden" id="encrypted-address" name="user.attributes.encrypted_address" value="" />
+                    <input type="hidden" id="encrypted-profession" name="user.attributes.encrypted_profession" value="" />
+                    <input type="hidden" id="wrapped-key" name="user.attributes.wrapped_key" value="" />
+                    <input type="hidden" id="webauthn-credential-id" name="user.attributes.webauthn_credential_id" value="" />
+                    <input type="hidden" id="encryption-salt" name="user.attributes.encryption_salt" value="" />
+                    <input type="hidden" id="public-key" name="user.attributes.public_key" value="" />
 
-                    <!-- Submit Button -->
+                    <!-- WebAuthn Status Indicator -->
+                    <div id="webauthn-status" style="margin: 20px 0; padding: 15px; border-radius: 8px; display: none; font-weight: 500;"></div>
+
+                    <!-- Submit Buttons -->
                     <div class="${properties.kcFormGroupClass!}" style="margin-top: 30px;">
                         <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
+                            <!-- Normal Register Button (No Encryption) -->
                             <button type="submit" 
+                                    class="${properties.kcButtonClass!} ${properties.kcButtonDefaultClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" 
+                                    id="kc-register-normal-btn"
+                                    style="margin-bottom: 15px; background: #6c757d;">
+                                📝 Register Without Encryption
+                            </button>
+                            
+                            <!-- Encrypt & Register Button (With YubiKey) -->
+                            <button type="button" 
                                     class="${properties.kcButtonClass!} ${properties.kcButtonPrimaryClass!} ${properties.kcButtonBlockClass!} ${properties.kcButtonLargeClass!}" 
-                                    id="kc-register-btn">
-                                ${msg("doRegister")}
+                                    id="kc-register-encrypted-btn"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-weight: bold;">
+                                🔐 Encrypt & Register with YubiKey
                             </button>
                         </div>
                     </div>
@@ -179,7 +213,7 @@
                 </form>
 
                 <!-- Load encryption script -->
-                <script src="${url.resourcesPath}/js/registration-with-webauthn.js"></script>
+                <script src="${url.resourcesPath}/js/registration-encryption-yubikey.js"></script>
             </div>
         </div>
     </#if>

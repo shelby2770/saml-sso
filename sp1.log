@@ -1,16 +1,15 @@
 Watching for file changes with StatReloader
-[29/Oct/2025 08:03:27] "POST /api/saml/callback/ HTTP/1.1" 200 42283
-[29/Oct/2025 08:03:27] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:03:45] "GET / HTTP/1.1" 200 2683
-[29/Oct/2025 08:03:45] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:03:47] "GET /api/saml/logout/ HTTP/1.1" 302 0
-[29/Oct/2025 08:03:48] "POST /api/saml/callback/ HTTP/1.1" 200 2924
-[29/Oct/2025 08:03:48] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:03:50] "GET /api/saml/login/ HTTP/1.1" 302 0
+[29/Oct/2025 12:17:33] "GET / HTTP/1.1" 200 1817
+[29/Oct/2025 12:18:06] "GET /api/saml/logout/ HTTP/1.1" 302 0
+[29/Oct/2025 12:18:07] "POST /api/saml/callback/ HTTP/1.1" 200 2924
+[29/Oct/2025 12:18:07] "GET /static/js/main.js HTTP/1.1" 404 1844
+[29/Oct/2025 12:18:10] "GET / HTTP/1.1" 200 1817
+[29/Oct/2025 12:18:10] "GET /static/js/main.js HTTP/1.1" 404 1844
+[29/Oct/2025 12:18:12] "GET /api/saml/login/ HTTP/1.1" 302 0
 Performing system checks...
 
 System check identified no issues (0 silenced).
-October 29, 2025 - 08:02:36
+October 29, 2025 - 12:17:15
 Django version 5.1.2, using settings 'SAML_DJNAGO.settings'
 Starting development server at http://127.0.0.1:8001/
 Quit the server with CONTROL-C.
@@ -19,47 +18,97 @@ Quit the server with CONTROL-C.
 ================================================================================
 🔥 RAW SAML RESPONSE (BASE64 ENCODED):
 ================================================================================
+PHNhbWxwOkxvZ291dFJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6...
+
+================================================================================
+🔥 DECODED SAML ASSERTION (XML):
+================================================================================
+<?xml version="1.0" ?>
+<samlp:LogoutResponse xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_86ab36cd-cfb5-4fa8-a131-aa939eb86bd5" InResponseTo="ONELOGIN_f77aad8105f899900de748180cf093f66a5c0e62" IssueInstant="2025-10-29T12:18:06.174Z" Version="2.0">
+  <Issuer>http://localhost:8080/realms/demo</Issuer>
+  <samlp:Status>
+    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+  </samlp:Status>
+</samlp:LogoutResponse>
+
+================================================================================
+
+Missing Status on response
+
+================================================================================
+🔥 RAW SAML RESPONSE (BASE64 ENCODED):
+================================================================================
 PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIERlc3RpbmF0aW9uPSJodHRwOi8vMTI3LjAuMC4xOjgw...
 
 ================================================================================
 🔥 DECODED SAML ASSERTION (XML):
 ================================================================================
 <?xml version="1.0" ?>
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_87d1e592-0df6-48c7-8823-a4b62a8fd6fe" InResponseTo="ONELOGIN_03dd83f6490e640f9e283a52f4e0219609752794" IssueInstant="2025-10-29T07:58:17.637Z" Version="2.0">
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_9edcade9-736c-46d4-8628-c51e3a3e2ac5" InResponseTo="ONELOGIN_bb1cef23f25b18ef2363f8e9c890a5bd971718d2" IssueInstant="2025-10-29T12:18:42.152Z" Version="2.0">
   <saml:Issuer>http://localhost:8080/realms/demo</saml:Issuer>
   <samlp:Status>
     <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
   </samlp:Status>
-  <saml:Assertion xmlns="urn:oasis:names:tc:SAML:2.0:assertion" ID="ID_092fc7e0-0b81-4567-b0db-78a655d7f9ec" IssueInstant="2025-10-29T07:58:17.637Z" Version="2.0">
+  <saml:Assertion xmlns="urn:oasis:names:tc:SAML:2.0:assertion" ID="ID_a739e038-3237-4c8e-9a85-466a2d684061" IssueInstant="2025-10-29T12:18:42.151Z" Version="2.0">
     <saml:Issuer>http://localhost:8080/realms/demo</saml:Issuer>
     <saml:Subject>
-      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">G-6a5f4cfc-a5e0-40cb-a79b-23122f127f7e</saml:NameID>
+      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">G-7e097aad-754c-4579-bba4-ed5bc328d2dd</saml:NameID>
       <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-        <saml:SubjectConfirmationData InResponseTo="ONELOGIN_03dd83f6490e640f9e283a52f4e0219609752794" NotOnOrAfter="2025-10-29T08:03:15.637Z" Recipient="http://127.0.0.1:8001/api/saml/callback/"/>
+        <saml:SubjectConfirmationData InResponseTo="ONELOGIN_bb1cef23f25b18ef2363f8e9c890a5bd971718d2" NotOnOrAfter="2025-10-29T12:23:40.151Z" Recipient="http://127.0.0.1:8001/api/saml/callback/"/>
       </saml:SubjectConfirmation>
     </saml:Subject>
-    <saml:Conditions NotBefore="2025-10-29T07:58:15.637Z" NotOnOrAfter="2025-10-29T07:59:15.637Z">
+    <saml:Conditions NotBefore="2025-10-29T12:18:40.151Z" NotOnOrAfter="2025-10-29T12:19:40.151Z">
       <saml:AudienceRestriction>
         <saml:Audience>django-saml-app</saml:Audience>
       </saml:AudienceRestriction>
     </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="2025-10-29T07:58:17.637Z" SessionIndex="a0801da6-41df-4287-9765-306321ff5a67::django-saml-app" SessionNotOnOrAfter="2025-10-29T17:58:17.637Z">
+    <saml:AuthnStatement AuthnInstant="2025-10-29T12:18:42.153Z" SessionIndex="feef2981-9b81-48c9-847a-7bdbad42f2a9::django-saml-app" SessionNotOnOrAfter="2025-10-29T22:18:42.153Z">
       <saml:AuthnContext>
         <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
       </saml:AuthnContext>
     </saml:AuthnStatement>
     <saml:AttributeStatement>
-      <saml:Attribute FriendlyName="First Name" Name="given_name" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Nafisha</saml:AttributeValue>
+      <saml:Attribute Name="encrypted_address" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">X2vGumBahpmO5pSJYMLRQS8f9Wbo</saml:AttributeValue>
       </saml:Attribute>
-      <saml:Attribute FriendlyName="Last Name" Name="family_name" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Tabassum</saml:AttributeValue>
+      <saml:Attribute Name="encrypted_firstName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">WnDOoz+2sWHsoqM8khT7fVIbw+M=</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encrypted_email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">enDOo0E4XTjZuLEhKbp6ndtaevRbOikIKs6W8/T3</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="webauthn_credential_id" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">71aQJTTBC4vCOzMmpgF+fEgX3vW8m76cxD5LGdl9zHsVjtKz8PLtfs87PHy7AmtRQWmHunjuf50/caFXoo25mA==</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="wrapping_iv" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">AW6WvzlZVowPVaEW</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="wrapped_key" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">cLwPLEXyWpM8XlWAf2BvS4jU9ZgdR/z6d/hKSXbWC1R1ySwfYPVbU3dhIsULbn9P</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encrypted_age" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">KTCvIEeVykuIZdI082rOXZP1</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encryption_iv" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">NiYXgKj1v419JMNZ</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="public_key" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEn+yIRxKiJeDxqGgGJJyKHxd7PiufESoBb87ifyUtqGMGy3hi2FVke9kjQvn6KVTRumprxfNC5XA6Ys1+zC/A2w==</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encrypted_lastName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">WmfJsG/FZhZkaTtVCqSj53tMNzmR</saml:AttributeValue>
       </saml:Attribute>
       <saml:Attribute Name="username" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">nafisha70</saml:AttributeValue>
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">asiradnan</saml:AttributeValue>
       </saml:Attribute>
-      <saml:Attribute FriendlyName="Email" Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">nafisha@gmail.com</saml:AttributeValue>
+      <saml:Attribute Name="encryption_salt" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">z6a+T0Phwc9rSTpDG9VCeA==</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encrypted_mobile" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">KTCT4jNrA2uEhPHcKXaWi1PxmTJA13nHOA==</saml:AttributeValue>
+      </saml:Attribute>
+      <saml:Attribute Name="encrypted_profession" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">SFTiqIAimuo4v8+8mUphSGaq0w==</saml:AttributeValue>
       </saml:Attribute>
       <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
         <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">offline_access</saml:AttributeValue>
@@ -82,165 +131,8 @@ PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJv
     </saml:AttributeStatement>
   </saml:Assertion>
 </samlp:Response>
-
-================================================================================
-
-No Signature found. SAML Response rejected
-
-🔍 Extracted 6 attributes from SAML XML
-
-============================================================
-🔍 RAW ATTRIBUTES FROM KEYCLOAK (Development Mode):
-============================================================
-  Key: 'given_name' = Value: 'Nafisha'
-  Key: 'family_name' = Value: 'Tabassum'
-  Key: 'username' = Value: 'nafisha70'
-  Key: 'email' = Value: 'nafisha@gmail.com'
-  Key: 'Role' = Value: 'uma_authorization'
-  Key: 'NameID' = Value: 'G-6a5f4cfc-a5e0-40cb-a79b-23122f127f7e'
-============================================================
-
-
-================================================================================
-🔥 RAW SAML RESPONSE (BASE64 ENCODED):
-================================================================================
-PHNhbWxwOkxvZ291dFJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6...
-
-================================================================================
-🔥 DECODED SAML ASSERTION (XML):
-================================================================================
-<?xml version="1.0" ?>
-<samlp:LogoutResponse xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_1e28ff09-23b3-44b1-90b3-95a3d2913880" InResponseTo="ONELOGIN_0ab6b4ba239dc3de6f395479355613f90e418c7c" IssueInstant="2025-10-29T08:03:47.618Z" Version="2.0">
-  <Issuer>http://localhost:8080/realms/demo</Issuer>
-  <samlp:Status>
-    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
-  </samlp:Status>
-</samlp:LogoutResponse>
-
-================================================================================
-
-Missing Status on response
-
-================================================================================
-🔥 RAW SAML RESPONSE (BASE64 ENCODED):
-================================================================================
-[29/Oct/2025 08:04:39] "POST /api/saml/callback/ HTTP/1.1" 200 42375
-[29/Oct/2025 08:04:40] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:04:49] "GET /api/saml/logout/ HTTP/1.1" 302 0
-[29/Oct/2025 08:04:49] "POST /api/saml/callback/ HTTP/1.1" 200 2924
-[29/Oct/2025 08:04:49] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:04:52] "GET / HTTP/1.1" 200 1817
-[29/Oct/2025 08:04:52] "GET /static/js/main.js HTTP/1.1" 404 1844
-[29/Oct/2025 08:04:53] "GET /api/saml/login/ HTTP/1.1" 302 0
-PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIERlc3RpbmF0aW9uPSJodHRwOi8vMTI3LjAuMC4xOjgw...
-
-================================================================================
-🔥 DECODED SAML ASSERTION (XML):
-================================================================================
-<?xml version="1.0" ?>
-<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_d66e4a84-58c4-41da-ae63-97ffba2eb9db" InResponseTo="ONELOGIN_b73cd212e67e24644b6f644ee5bef376eb22551f" IssueInstant="2025-10-29T08:04:39.686Z" Version="2.0">
-  <saml:Issuer>http://localhost:8080/realms/demo</saml:Issuer>
-  <samlp:Status>
-    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
-  </samlp:Status>
-  <saml:Assertion xmlns="urn:oasis:names:tc:SAML:2.0:assertion" ID="ID_e7f25934-15ab-456d-a5e5-f698b5794736" IssueInstant="2025-10-29T08:04:39.685Z" Version="2.0">
-    <saml:Issuer>http://localhost:8080/realms/demo</saml:Issuer>
-    <saml:Subject>
-      <saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:persistent">G-5906607d-3593-44e2-ab8e-b1fd1b5fa490</saml:NameID>
-      <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-        <saml:SubjectConfirmationData InResponseTo="ONELOGIN_b73cd212e67e24644b6f644ee5bef376eb22551f" NotOnOrAfter="2025-10-29T08:09:37.685Z" Recipient="http://127.0.0.1:8001/api/saml/callback/"/>
-      </saml:SubjectConfirmation>
-    </saml:Subject>
-    <saml:Conditions NotBefore="2025-10-29T08:04:37.685Z" NotOnOrAfter="2025-10-29T08:05:37.685Z">
-      <saml:AudienceRestriction>
-        <saml:Audience>django-saml-app</saml:Audience>
-      </saml:AudienceRestriction>
-    </saml:Conditions>
-    <saml:AuthnStatement AuthnInstant="2025-10-29T08:04:39.686Z" SessionIndex="1ef01f9f-67ec-48ee-ac9d-5a97b6a30143::django-saml-app" SessionNotOnOrAfter="2025-10-29T18:04:39.686Z">
-      <saml:AuthnContext>
-        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified</saml:AuthnContextClassRef>
-      </saml:AuthnContext>
-    </saml:AuthnStatement>
-    <saml:AttributeStatement>
-      <saml:Attribute FriendlyName="First Name" Name="given_name" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">A.J.M</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute FriendlyName="Last Name" Name="family_name" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Istiaque</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="username" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">adnanistiaque70</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute FriendlyName="Email" Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">ajm.istiaque@g.bracu.ac.bd</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">offline_access</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">view-profile</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">default-roles-demo-1</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">manage-account-links</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">manage-account</saml:AttributeValue>
-      </saml:Attribute>
-      <saml:Attribute Name="Role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-        <saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">uma_authorization</saml:AttributeValue>
-      </saml:Attribute>
-    </saml:AttributeStatement>
-  </saml:Assertion>
-</samlp:Response>
-
-================================================================================
-
-No Signature found. SAML Response rejected
-
-🔍 Extracted 6 attributes from SAML XML
-
-============================================================
-🔍 RAW ATTRIBUTES FROM KEYCLOAK (Development Mode):
-============================================================
-  Key: 'given_name' = Value: 'A.J.M'
-  Key: 'family_name' = Value: 'Istiaque'
-  Key: 'username' = Value: 'adnanistiaque70'
-  Key: 'email' = Value: 'ajm.istiaque@g.bracu.ac.bd'
-  Key: 'Role' = Value: 'uma_authorization'
-  Key: 'NameID' = Value: 'G-5906607d-3593-44e2-ab8e-b1fd1b5fa490'
-============================================================
-
-
-================================================================================
-🔥 RAW SAML RESPONSE (BASE64 ENCODED):
-================================================================================
-PHNhbWxwOkxvZ291dFJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6YXNzZXJ0aW9uIiB4bWxuczpzYW1sPSJ1cm46b2FzaXM6bmFtZXM6dGM6...
-
-================================================================================
-🔥 DECODED SAML ASSERTION (XML):
-================================================================================
-<?xml version="1.0" ?>
-<samlp:LogoutResponse xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" Destination="http://127.0.0.1:8001/api/saml/callback/" ID="ID_980d8e54-f01f-47c6-bfad-211790ee335f" InResponseTo="ONELOGIN_75877002dc58103f7ed31f2d9ad5c76267ae1db6" IssueInstant="2025-10-29T08:04:49.251Z" Version="2.0">
-  <Issuer>http://localhost:8080/realms/demo</Issuer>
-  <samlp:Status>
-    <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
-  </samlp:Status>
-</samlp:LogoutResponse>
-
-================================================================================
-
-Missing Status on response
-
-================================================================================
-🔥 RAW SAML RESPONSE (BASE64 ENCODED):
-================================================================================
-PHNhbWxwOlJlc3BvbnNlIHhtbG5zOnNhbWxwPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoyLjA6cHJvdG9jb2wiIHhtbG5zOnNhbWw9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIERlc3RpbmF0aW9uPSJodHRwOi8vMTI3LjAuMC4xOjgw...
-
-================================================================================
-🔥 DECODED SAML ASSERTION (XML):
-================================================================================
-[29/Oct/2025 08:05:11] "POST /api/saml/callback/ HTTP/1.1" 200 42375
-[29/Oct/2025 08:05:11] "GET /static/js/main.js HTTP/1.1" 404 1844
+[29/Oct/2025 12:18:42] "POST /api/saml/callback/ HTTP/1.1" 200 60647
+[29/Oct/2025 12:18:42] "GET /static/js/main.js HTTP/1.1" 404 1844
+[29/Oct/2025 12:18:53] "GET /api/saml/logout/ HTTP/1.1" 302 0
+[29/Oct/2025 12:18:54] "POST /api/saml/callback/ HTTP/1.1" 200 2924
+[29/Oct/2025 12:18:54] "GET /static/js/main.js HTTP/1.1" 404 1844
