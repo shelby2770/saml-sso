@@ -6,6 +6,9 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+import base64
+import xml.dom.minidom as minidom
+import xml.etree.ElementTree as ET
 
 def prepare_django_request(request):
     return {
@@ -17,6 +20,51 @@ def prepare_django_request(request):
         'post_data': request.POST.copy(),
     }
 
+def extract_attributes_from_saml_xml(saml_xml):
+    """
+    Extract attributes directly from SAML XML response
+    when signature validation fails in development mode
+    """
+    try:
+        # Parse the XML
+        root = ET.fromstring(saml_xml)
+        
+        # Define SAML namespaces
+        namespaces = {
+            'saml': 'urn:oasis:names:tc:SAML:2.0:assertion',
+            'samlp': 'urn:oasis:names:tc:SAML:2.0:protocol'
+        }
+        
+        attributes = {}
+        
+        # Find all Attribute elements
+        for attr in root.findall('.//saml:Attribute', namespaces):
+            attr_name = attr.get('Name')
+            attr_values = []
+            
+            # Get all AttributeValue elements
+            for attr_value in attr.findall('saml:AttributeValue', namespaces):
+                if attr_value.text:
+                    attr_values.append(attr_value.text)
+            
+            # Store attribute - if multiple values, keep as list; if single, store as string
+            if len(attr_values) == 1:
+                attributes[attr_name] = attr_values[0]
+            elif len(attr_values) > 1:
+                attributes[attr_name] = attr_values
+        
+        # Extract NameID
+        nameid_elem = root.find('.//saml:NameID', namespaces)
+        if nameid_elem is not None and nameid_elem.text:
+            attributes['NameID'] = nameid_elem.text
+        
+        print(f"\n🔍 Extracted {len(attributes)} attributes from SAML XML")
+        return attributes
+        
+    except Exception as e:
+        print(f"❌ Error extracting attributes from XML: {e}")
+        return {}
+
 @csrf_exempt
 def saml_login(request):
     req = prepare_django_request(request)
@@ -27,6 +75,40 @@ def saml_login(request):
 def saml_callback(request):
     req = prepare_django_request(request)
     auth = OneLogin_Saml2_Auth(req, settings.SAML_SETTINGS)
+    
+    # ============================================================
+    # 🔍 CAPTURE AND PRINT RAW SAML ASSERTION
+    # ============================================================
+    raw_saml_response = request.POST.get('SAMLResponse', '')
+    if raw_saml_response:
+        try:
+            # Decode the base64 SAML response
+            decoded_saml = base64.b64decode(raw_saml_response).decode('utf-8')
+            
+            # Pretty print XML
+            try:
+                dom = minidom.parseString(decoded_saml)
+                pretty_xml = dom.toprettyxml(indent="  ")
+            except:
+                pretty_xml = decoded_saml
+            
+            # Print to terminal
+            print("\n" + "="*80)
+            print("🔥 RAW SAML RESPONSE (BASE64 ENCODED):")
+            print("="*80)
+            print(raw_saml_response[:200] + "..." if len(raw_saml_response) > 200 else raw_saml_response)
+            print("\n" + "="*80)
+            print("🔥 DECODED SAML ASSERTION (XML):")
+            print("="*80)
+            print(pretty_xml)
+            print("="*80 + "\n")
+            
+            # Store for browser display
+            request.session['raw_saml_response'] = raw_saml_response
+            request.session['decoded_saml_xml'] = decoded_saml
+            
+        except Exception as e:
+            print(f"❌ Error decoding SAML response: {e}")
     
     # Check if this is a logout response instead of login response
     if request.POST.get('SAMLResponse') and 'Logout' in request.POST.get('SAMLResponse', ''):
@@ -155,15 +237,31 @@ def saml_callback(request):
         error_reason = auth.get_last_error_reason()
         if "No Signature found" in error_reason or "Signature validation failed" in error_reason:
             # This is a signature validation error during login, not a logout scenario
-            # Try to extract attributes anyway even if signature validation failed
+            # Extract attributes directly from XML since auth.get_attributes() returns empty
             try:
-                attributes = auth.get_attributes()
-                clean_attributes = {}
-                for key, value in attributes.items():
-                    if isinstance(value, list) and len(value) > 0:
-                        clean_attributes[key] = value[0]
-                    else:
-                        clean_attributes[key] = value
+                # Get the decoded SAML XML from session
+                decoded_saml_xml = request.session.get('decoded_saml_xml', '')
+                
+                if decoded_saml_xml:
+                    # Extract attributes directly from XML
+                    raw_attributes = extract_attributes_from_saml_xml(decoded_saml_xml)
+                    
+                    # Clean attributes (handle lists)
+                    clean_attributes = {}
+                    for key, value in raw_attributes.items():
+                        if isinstance(value, list) and len(value) > 0:
+                            clean_attributes[key] = value[0] if key != 'Role' else value
+                        else:
+                            clean_attributes[key] = value
+                else:
+                    # Fallback: try auth.get_attributes()
+                    attributes = auth.get_attributes()
+                    clean_attributes = {}
+                    for key, value in attributes.items():
+                        if isinstance(value, list) and len(value) > 0:
+                            clean_attributes[key] = value[0] if key != 'Role' else value
+                        else:
+                            clean_attributes[key] = value
                 
                 # DEBUG: Print all raw attributes
                 print("\n" + "="*60)
@@ -173,16 +271,20 @@ def saml_callback(request):
                     print(f"  Key: '{key}' = Value: '{value}'")
                 print("="*60 + "\n")
                 
-                name_id = auth.get_nameid() or 'dev_user'
+                name_id = clean_attributes.get('NameID') or auth.get_nameid() or 'N/A'
                 
                 # Extract custom attributes for display
+                # Map Keycloak's actual attribute names to our display names
                 user_attributes = {
-                    'username': clean_attributes.get('username', name_id),
-                    'email': clean_attributes.get('email', 'N/A'),
+                    'username': clean_attributes.get('username', clean_attributes.get('uid', 'N/A')),
+                    'email': clean_attributes.get('email', clean_attributes.get('mail', 'N/A')),
+                    'first_name': clean_attributes.get('given_name', clean_attributes.get('givenName', 'N/A')),
+                    'last_name': clean_attributes.get('family_name', clean_attributes.get('sn', 'N/A')),
                     'age': clean_attributes.get('age', 'N/A'),
-                    'mobile': clean_attributes.get('mobile', 'N/A'),
-                    'address': clean_attributes.get('address', 'N/A'),
-                    'profession': clean_attributes.get('profession', 'N/A'),
+                    'mobile': clean_attributes.get('mobile', clean_attributes.get('phone', clean_attributes.get('telephoneNumber', 'N/A'))),
+                    'address': clean_attributes.get('address', clean_attributes.get('street', 'N/A')),
+                    'profession': clean_attributes.get('profession', clean_attributes.get('title', 'N/A')),
+                    'roles': clean_attributes.get('Role', []) if isinstance(clean_attributes.get('Role'), list) else [clean_attributes.get('Role')] if clean_attributes.get('Role') else []
                 }
                 
                 # Extract encrypted attributes
@@ -209,13 +311,15 @@ def saml_callback(request):
                     'user_attributes': user_attributes,
                     'encrypted_attributes': encrypted_attributes,
                     'has_encrypted_data': has_encrypted_data,
-                    'raw_attributes': clean_attributes
+                    'raw_attributes': clean_attributes,
+                    'raw_saml_response': request.session.get('raw_saml_response', ''),
+                    'decoded_saml_xml': request.session.get('decoded_saml_xml', '')
                 })
             except Exception as e:
                 print(f"Error extracting attributes in dev mode: {e}")
                 # Fallback to basic auth
                 request.session['saml_authenticated'] = True
-                request.session['samlNameId'] = 'dev_user'
+                request.session['samlNameId'] = 'N/A'
                 request.session['samlUserdata'] = {
                     'status': 'authenticated',
                     'source': 'keycloak',
@@ -223,7 +327,7 @@ def saml_callback(request):
                 }
                 
                 return render(request, 'success.html', {
-                    'name_id': 'dev_user',
+                    'name_id': 'N/A',
                     'message': 'User authenticated successfully (development mode - signature validation bypassed)'
                 })
         

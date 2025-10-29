@@ -22,10 +22,8 @@ services:
     volumes:
       - ./demo-realm.json:/opt/keycloak/data/import/demo-realm.json
       - keycloak_data:/opt/keycloak/data
-      # Mount custom provider JAR
-      - ./keycloak-customization/target/keycloak-custom-extensions.jar:/opt/keycloak/providers/keycloak-custom-extensions.jar
-      # Mount custom theme
-      - ./keycloak-themes/spicy-theme:/opt/keycloak/themes/spicy-theme
+      # Mount custom registration theme
+      - ./custom-registration-theme:/opt/keycloak/themes/custom-registration-theme
     networks:
       - saml-network
     healthcheck:

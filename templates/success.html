@@ -57,6 +57,26 @@
             
             <div class="attribute-item">
                 <div class="attribute-icon">
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">First Name</div>
+                    <div class="attribute-value">{{ user_attributes.first_name }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">Last Name</div>
+                    <div class="attribute-value">{{ user_attributes.last_name }}</div>
+                </div>
+            </div>
+            
+            <div class="attribute-item">
+                <div class="attribute-icon">
                     <i class="fas fa-envelope"></i>
                 </div>
                 <div class="attribute-content">
@@ -104,6 +124,24 @@
                     <div class="attribute-value">{{ user_attributes.profession }}</div>
                 </div>
             </div>
+            
+            {% if user_attributes.roles %}
+            <div class="attribute-item" style="grid-column: 1 / -1;">
+                <div class="attribute-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="attribute-content">
+                    <div class="attribute-label">User Roles</div>
+                    <div class="attribute-value">
+                        {% for role in user_attributes.roles %}
+                            <span style="background: #e3f2fd; color: #1976d2; padding: 4px 12px; border-radius: 12px; display: inline-block; margin: 2px; font-size: 13px;">
+                                <i class="fas fa-tag"></i> {{ role }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endif %}
@@ -214,6 +252,31 @@
     </div>
     {% endif %}
     
+    <!-- 🔥 RAW SAML ASSERTION VIEWER -->
+    {% if raw_saml_response %}
+    <div class="saml-debug-section" style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #e9ecef;">
+        <h3 style="color: #dc3545; margin-bottom: 15px;">
+            <i class="fas fa-bug"></i> 🔥 RAW SAML ASSERTION DEBUG
+        </h3>
+        
+        <button onclick="toggleSamlDebug()" class="btn" style="margin-bottom: 15px; background: #dc3545;">
+            <i class="fas fa-eye"></i> Show/Hide Raw SAML Response
+        </button>
+        
+        <div id="saml-debug-content" style="display: none;">
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #495057;">📦 Base64 Encoded SAML Response:</h4>
+                <textarea readonly style="width: 100%; height: 150px; font-family: monospace; font-size: 12px; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; background: #fff;">{{ raw_saml_response }}</textarea>
+            </div>
+            
+            <div>
+                <h4 style="color: #495057;">📄 Decoded SAML XML:</h4>
+                <textarea readonly style="width: 100%; height: 400px; font-family: monospace; font-size: 12px; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; background: #fff;">{{ decoded_saml_xml }}</textarea>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
     <div class="actions">
         <a href="/" class="btn btn-primary">
             <i class="fas fa-home"></i> Go to Home
@@ -262,6 +325,30 @@
     console.log("\n✅ Has Encrypted Data:", hasEncryptedData);
     
     console.log("============================================================");
+    
+    // 🔥 CONSOLE LOG: Raw SAML Assertion
+    {% if raw_saml_response %}
+    console.log("\n" + "=".repeat(80));
+    console.log("🔥 RAW SAML RESPONSE (BASE64):");
+    console.log("=".repeat(80));
+    console.log("{{ raw_saml_response|safe|escapejs }}");
+    
+    console.log("\n" + "=".repeat(80));
+    console.log("🔥 DECODED SAML XML:");
+    console.log("=".repeat(80));
+    console.log("{{ decoded_saml_xml|safe|escapejs }}");
+    console.log("=".repeat(80) + "\n");
+    {% endif %}
+    
+    // Toggle SAML debug viewer
+    function toggleSamlDebug() {
+        const content = document.getElementById('saml-debug-content');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+        } else {
+            content.style.display = 'none';
+        }
+    }
     
     // Toggle full encrypted value display
     function toggleFullValue(id) {

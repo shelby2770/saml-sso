@@ -6,6 +6,9 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+import base64
+import xml.dom.minidom as minidom
+import xml.etree.ElementTree as ET
 
 def prepare_django_request(request):
     return {
@@ -17,6 +20,51 @@ def prepare_django_request(request):
         'post_data': request.POST.copy(),
     }
 
+def extract_attributes_from_saml_xml(saml_xml):
+    """
+    Extract attributes directly from SAML XML response
+    when signature validation fails in development mode
+    """
+    try:
+        # Parse the XML
+        root = ET.fromstring(saml_xml)
+        
+        # Define SAML namespaces
+        namespaces = {
+            'saml': 'urn:oasis:names:tc:SAML:2.0:assertion',
+            'samlp': 'urn:oasis:names:tc:SAML:2.0:protocol'
+        }
+        
+        attributes = {}
+        
+        # Find all Attribute elements
+        for attr in root.findall('.//saml:Attribute', namespaces):
+            attr_name = attr.get('Name')
+            attr_values = []
+            
+            # Get all AttributeValue elements
+            for attr_value in attr.findall('saml:AttributeValue', namespaces):
+                if attr_value.text:
+                    attr_values.append(attr_value.text)
+            
+            # Store attribute - if multiple values, keep as list; if single, store as string
+            if len(attr_values) == 1:
+                attributes[attr_name] = attr_values[0]
+            elif len(attr_values) > 1:
+                attributes[attr_name] = attr_values
+        
+        # Extract NameID
+        nameid_elem = root.find('.//saml:NameID', namespaces)
+        if nameid_elem is not None and nameid_elem.text:
+            attributes['NameID'] = nameid_elem.text
+        
+        print(f"\n🔍 [SP2] Extracted {len(attributes)} attributes from SAML XML")
+        return attributes
+        
+    except Exception as e:
+        print(f"❌ [SP2] Error extracting attributes from XML: {e}")
+        return {}
+
 @csrf_exempt
 def saml_login(request):
     req = prepare_django_request(request)
@@ -27,6 +75,40 @@ def saml_login(request):
 def saml_callback(request):
     req = prepare_django_request(request)
     auth = OneLogin_Saml2_Auth(req, settings.SAML_SETTINGS)
+    
+    # ============================================================
+    # 🔍 CAPTURE AND PRINT RAW SAML ASSERTION (SP2)
+    # ============================================================
+    raw_saml_response = request.POST.get('SAMLResponse', '')
+    if raw_saml_response:
+        try:
+            # Decode the base64 SAML response
+            decoded_saml = base64.b64decode(raw_saml_response).decode('utf-8')
+            
+            # Pretty print XML
+            try:
+                dom = minidom.parseString(decoded_saml)
+                pretty_xml = dom.toprettyxml(indent="  ")
+            except:
+                pretty_xml = decoded_saml
+            
+            # Print to terminal (SP2)
+            print("\n" + "="*80)
+            print("🔥 [SP2] RAW SAML RESPONSE (BASE64 ENCODED):")
+            print("="*80)
+            print(raw_saml_response[:200] + "..." if len(raw_saml_response) > 200 else raw_saml_response)
+            print("\n" + "="*80)
+            print("🔥 [SP2] DECODED SAML ASSERTION (XML):")
+            print("="*80)
+            print(pretty_xml)
+            print("="*80 + "\n")
+            
+            # Store for browser display
+            request.session['raw_saml_response'] = raw_saml_response
+            request.session['decoded_saml_xml'] = decoded_saml
+            
+        except Exception as e:
+            print(f"❌ [SP2] Error decoding SAML response: {e}")
     
     # Check if this is a logout response instead of login response
     if request.POST.get('SAMLResponse') and 'Logout' in request.POST.get('SAMLResponse', ''):
@@ -133,7 +215,7 @@ def saml_callback(request):
             # This is a signature validation error during login, not a logout scenario
             # For development, we'll create a basic authenticated session
             request.session['saml_authenticated'] = True
-            request.session['samlNameId'] = 'dev_user'
+            request.session['samlNameId'] = 'N/A'
             request.session['samlUserdata'] = {
                 'status': 'authenticated',
                 'source': 'keycloak',
@@ -141,7 +223,7 @@ def saml_callback(request):
             }
             
             return render(request, 'success.html', {
-                'name_id': 'dev_user',
+                'name_id': 'N/A',
                 'message': 'User authenticated successfully (development mode - signature validation bypassed)'
             })
         
